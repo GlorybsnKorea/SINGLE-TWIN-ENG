@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 6 — Understanding Single Main Engine and Twin Main Engine Vessel Operations</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Source+Sans+3:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0A1628;
+    --dark-blue: #0D2B4E;
+    --med-blue: #1A5276;
+    --teal: #148F77;
+    --light-teal: #1ABC9C;
+    --accent: #F39C12;
+    --white: #FFFFFF;
+    --off-white: #F0F4F8;
+    --light-gray: #D5DADE;
+    --text-dark: #1B2631;
+    --text-mid: #566573;
+    --red: #E74C3C;
+    --green: #27AE60;
+    --yellow: #F1C40F;
+    --card-shadow: 0 4px 24px rgba(10, 22, 40, 0.10);
+    --card-shadow-hover: 0 8px 40px rgba(10, 22, 40, 0.16);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: var(--off-white);
+    color: var(--text-dark);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: var(--navy);
+    min-height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1.2rem 2rem 1rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(ellipse at 20% 80%, rgba(20, 143, 119, 0.15) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(26, 82, 118, 0.2) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--teal), var(--accent), var(--light-teal));
+  }
+  .hero-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-chapter {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--light-teal);
+    font-size: 0.55rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+  }
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    color: var(--white);
+    line-height: 1.3;
+    margin-bottom: 0.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.4s;
+  }
+  .hero-divider {
+    width: 50px;
+    height: 2px;
+    background: var(--teal);
+    margin-bottom: 0.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.5s;
+  }
+  .hero-topics {
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.6s;
+  }
+  .hero-topics h3 {
+    color: var(--light-teal);
+    font-size: 0.65rem;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+  }
+  .hero-topics p {
+    color: var(--light-gray);
+    font-size: 0.6rem;
+    line-height: 1.6;
+  }
+  .hero-copyright {
+    position: absolute;
+    bottom: 0.5rem;
+    left: 2rem;
+    color: var(--text-mid);
+    font-size: 0.55rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.8s;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== NAV / TOC ===== */
+  .toc {
+    background: var(--white);
+    border-bottom: 1px solid var(--light-gray);
+    padding: 0.5rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+  }
+  .toc-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .toc-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.5rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-mid);
+    white-space: nowrap;
+  }
+  .toc-links {
+    display: flex;
+    gap: 0.2rem;
+    flex-wrap: wrap;
+  }
+  .toc-links a {
+    text-decoration: none;
+    font-size: 0.55rem;
+    font-weight: 600;
+    color: var(--med-blue);
+    padding: 0.15rem 0.45rem;
+    border-radius: 3px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .toc-links a:hover {
+    background: var(--med-blue);
+    color: var(--white);
+  }
+
+  /* ===== MAIN CONTENT ===== */
+  .content {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 2rem 1rem;
+  }
+
+  /* ===== SECTION ===== */
+  .section {
+    margin-top: 0.8rem;
+    scroll-margin-top: 2rem;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+    padding-bottom: 0.2rem;
+    border-bottom: 2px solid var(--navy);
+  }
+  .section-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    color: var(--navy);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 0.85rem;
+    color: var(--navy);
+    line-height: 1.3;
+  }
+
+  /* ===== CARDS ===== */
+  .card {
+    background: var(--white);
+    border-radius: 10px;
+    box-shadow: var(--card-shadow);
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: box-shadow 0.3s;
+  }
+  .card:hover { box-shadow: var(--card-shadow-hover); }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 5px;
+    height: 100%;
+    background: var(--teal);
+  }
+  .card.accent-blue::before { background: var(--med-blue); }
+  .card.accent-orange::before { background: var(--accent); }
+  .card.accent-red::before { background: var(--red); }
+  .card.accent-green::before { background: var(--green); }
+
+  .card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.15rem;
+    color: var(--dark-blue);
+    margin-bottom: 0.8rem;
+  }
+  .card p { color: var(--text-dark); font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .card .note { color: var(--text-mid); font-style: italic; font-size: 0.9rem; }
+
+  /* ===== VESSEL DIAGRAM ===== */
+  .vessel-diagram {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .vessel-svg-wrap {
+    flex-shrink: 0;
+    width: 200px;
+  }
+  .vessel-info { flex: 1; min-width: 280px; }
+
+  /* ===== OPERATION LAYOUT ===== */
+  .op-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  @media (max-width: 700px) {
+    .op-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ===== STEP INDICATOR ===== */
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+  }
+  .step-num {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--white);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-content h4 {
+    font-size: 1rem;
+    color: var(--dark-blue);
+    font-weight: 700;
+    margin-bottom: 0.15rem;
+  }
+  .step-content p {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--text-mid);
+  }
+
+  /* ===== RESULT BOX ===== */
+  .result {
+    background: #FEF9E7;
+    border: 2px solid var(--accent);
+    border-radius: 8px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .result.danger {
+    background: #FDEDEC;
+    border-color: var(--red);
+  }
+  .result.success {
+    background: #EAFAF1;
+    border-color: var(--green);
+  }
+  .result-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.4rem;
+  }
+  .result.danger .result-label { color: var(--red); }
+  .result.success .result-label { color: var(--green); }
+  .result p { font-size: 0.95rem; color: var(--text-dark); }
+
+  /* ===== CONTROL PANEL ===== */
+  .control-panel {
+    background: var(--white);
+    border: 2px solid var(--light-gray);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .control-panel-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--dark-blue);
+    text-align: center;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--light-gray);
+  }
+  .control-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .ctrl-col {
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+  }
+  .ctrl-col.active {
+    background: #EBF5FB;
+    border: 1.5px solid var(--med-blue);
+  }
+  .ctrl-col.disabled {
+    background: #FDEDEC;
+    border: 1.5px solid var(--red);
+  }
+  .ctrl-col h5 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    margin-bottom: 0.6rem;
+    text-transform: uppercase;
+  }
+  .ctrl-col.active h5 { color: var(--med-blue); }
+  .ctrl-col.disabled h5 { color: var(--red); }
+  .ctrl-col .value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+  .ctrl-col.active .value { color: var(--green); }
+  .ctrl-col.disabled .value { color: var(--red); }
+  .ctrl-col .sub {
+    font-size: 0.8rem;
+    color: var(--text-mid);
+    margin-top: 0.3rem;
+  }
+  .combo-handle {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--light-gray);
+    text-align: center;
+  }
+  .combo-handle .label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--dark-blue);
+  }
+  .combo-handle .value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-top: 0.3rem;
+  }
+
+  /* ===== PROPELLER STATUS ===== */
+  .prop-status {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    margin: 1rem 0;
+  }
+  .prop {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .prop-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+    border: 3px solid;
+  }
+  .prop-circle.on {
+    background: #EAFAF1;
+    border-color: var(--green);
+    color: var(--green);
+  }
+  .prop-circle.off {
+    background: #FDEDEC;
+    border-color: var(--red);
+    color: var(--red);
+  }
+  .prop-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-mid);
+  }
+
+  /* ===== VESSEL SVG ===== */
+  svg.vessel { display: block; margin: 0 auto; }
+
+  /* ===== PAGE BADGE ===== */
+  .page-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-mid);
+    text-align: right;
+    margin-top: 0.5rem;
+  }
+
+  /* ===== DIVIDER ===== */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--light-gray), transparent);
+    margin: 3rem 0;
+  }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    background: var(--navy);
+    color: var(--text-mid);
+    text-align: center;
+    padding: 2.5rem 2rem;
+    font-size: 0.85rem;
+  }
+  .footer a { color: var(--light-teal); text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+
+  /* ===== PRINT ===== */
+  @media print {
+    .toc { display: none; }
+    .hero { min-height: auto; padding: 2rem; page-break-after: always; }
+    .section { page-break-before: always; }
+    .card { box-shadow: none; border: 1px solid #ddd; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-chapter">Chapter 6</div>
+    <h1>Understanding Single Main Engine and Twin Main Engine Vessel Operations</h1>
+    <div class="hero-divider"></div>
+    <div class="hero-topics">
+      <h3>Topics Covered</h3>
+      <p>
+        Single &amp; Twin Main Engine Fundamentals &nbsp;|&nbsp; Normal Operations<br>
+        Starboard Engine Failure (Ahead &amp; Astern) &nbsp;|&nbsp; Port Engine Failure (Ahead &amp; Astern)
+      </p>
+    </div>
+  </div>
+  <div class="hero-copyright">Copyright by Glory Lee &nbsp;|&nbsp; https://blog.naver.com/glory5239</div>
+</header>
+
+<!-- ===== TABLE OF CONTENTS ===== -->
+<nav class="toc">
+  <div class="toc-inner">
+    <span class="toc-label">Navigate</span>
+    <div class="toc-links">
+      <a href="#sec1">1. Single Engine</a>
+      <a href="#sec2">2. Twin Engine</a>
+      <a href="#sec2-1">2-1. Normal Op</a>
+      <a href="#sec3">3. STBD Disabled — Ahead</a>
+      <a href="#sec3-1">3-1. Controls</a>
+      <a href="#sec3-2">3-2. Astern</a>
+      <a href="#sec3-3">3-3. Controls</a>
+      <a href="#sec4">4. PORT Disabled — Ahead</a>
+      <a href="#sec4-1">4-1. Controls</a>
+      <a href="#sec4-2">4-2. Astern</a>
+      <a href="#sec4-3">4-3. Controls</a>
+    </div>
+  </div>
+</nav>
+
+<main class="content">
+
+  <!-- ===== SECTION 1: SINGLE MAIN ENGINE ===== -->
+  <section class="section" id="sec1">
+    <div class="section-header">
+      <span class="section-num">1.</span>
+      <h2 class="section-title">Single Main Engine — Basic Understanding</h2>
+    </div>
+
+    <div class="vessel-diagram">
+      <div class="vessel-svg-wrap">
+        <svg class="vessel" viewBox="0 0 140 320" width="160" height="300">
+          <defs>
+            <linearGradient id="hullGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#1A5276" stop-opacity="0.08"/>
+              <stop offset="100%" stop-color="#1A5276" stop-opacity="0.03"/>
+            </linearGradient>
+          </defs>
+          <!-- Hull -->
+          <path d="M70 10 Q110 10 115 50 L115 260 Q115 300 70 310 Q25 300 25 260 L25 50 Q25 10 70 10Z" fill="url(#hullGrad)" stroke="#1A5276" stroke-width="2.5"/>
+          <!-- Centerline -->
+          <line x1="70" y1="5" x2="70" y2="315" stroke="#1A5276" stroke-width="2" stroke-dasharray="8 6"/>
+          <!-- Propeller -->
+          <circle cx="70" cy="275" r="14" fill="#148F77" stroke="#0D2B4E" stroke-width="2"/>
+          <text x="70" y="280" text-anchor="middle" fill="white" font-size="11" font-weight="bold">P</text>
+          <!-- Labels -->
+          <text x="70" y="155" text-anchor="middle" fill="#566573" font-size="11" font-family="sans-serif">VESSEL</text>
+          <text x="70" y="310" text-anchor="middle" fill="#1A5276" font-size="9" font-weight="bold" font-family="sans-serif">CENTER LINE</text>
+        </svg>
+      </div>
+      <div class="vessel-info">
+        <div class="card accent-blue">
+          <div class="card-title">Single Main Engine Vessel Configuration</div>
+          <p>All Single Main Engine vessels have the following arrangement based on the hull's exact centerline:</p>
+          <p><strong>1)</strong> Propeller shaft center is positioned on the centerline</p>
+          <p><strong>2)</strong> Rudder center is positioned on the centerline</p>
+        </div>
+        <div class="card accent-orange">
+          <div class="card-title">Key Note</div>
+          <p>For a Single Main Engine vessel, course changes are achieved <strong>ONLY</strong> by adjusting the rudder (steering) angle, up to <strong>35° to port or starboard</strong>.</p>
+        </div>
+      </div>
+    </div>
+    <div class="page-badge">Page 11-1</div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== SECTION 2: TWIN MAIN ENGINE ===== -->
+  <section class="section" id="sec2">
+    <div class="section-header">
+      <span class="section-num">2.</span>
+      <h2 class="section-title">Twin Main Engine — Basic Understanding</h2>
+    </div>
+
+    <div class="vessel-diagram">
+      <div class="vessel-svg-wrap">
+        <svg class="vessel" viewBox="0 0 160 320" width="180" height="300">
+          <defs>
+            <linearGradient id="hullGrad2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#1A5276" stop-opacity="0.08"/>
+              <stop offset="100%" stop-color="#1A5276" stop-opacity="0.03"/>
+            </linearGradient>
+          </defs>
+          <!-- Hull -->
+          <path d="M80 10 Q125 10 130 50 L130 260 Q130 300 80 310 Q30 300 30 260 L30 50 Q30 10 80 10Z" fill="url(#hullGrad2)" stroke="#1A5276" stroke-width="2.5"/>
+          <!-- Center line (faint) -->
+          <line x1="80" y1="5" x2="80" y2="315" stroke="#D5DADE" stroke-width="1" stroke-dasharray="6 5"/>
+          <!-- Port propeller line -->
+          <line x1="55" y1="240" x2="55" y2="295" stroke="#1A5276" stroke-width="1.5" stroke-dasharray="5 4"/>
+          <!-- Starboard propeller line -->
+          <line x1="105" y1="240" x2="105" y2="295" stroke="#1A5276" stroke-width="1.5" stroke-dasharray="5 4"/>
+          <!-- Port propeller -->
+          <circle cx="55" cy="270" r="13" fill="#148F77" stroke="#0D2B4E" stroke-width="2"/>
+          <text x="55" y="274" text-anchor="middle" fill="white" font-size="9" font-weight="bold">P</text>
+          <!-- Starboard propeller -->
+          <circle cx="105" cy="270" r="13" fill="#148F77" stroke="#0D2B4E" stroke-width="2"/>
+          <text x="105" y="274" text-anchor="middle" fill="white" font-size="9" font-weight="bold">S</text>
+          <!-- Labels -->
+          <text x="80" y="155" text-anchor="middle" fill="#566573" font-size="11" font-family="sans-serif">VESSEL</text>
+          <text x="55" y="300" text-anchor="middle" fill="#1A5276" font-size="8" font-weight="bold">PORT</text>
+          <text x="105" y="300" text-anchor="middle" fill="#1A5276" font-size="8" font-weight="bold">STBD</text>
+        </svg>
+      </div>
+      <div class="vessel-info">
+        <div class="card accent-blue">
+          <div class="card-title">Twin Main Engine Vessel Configuration</div>
+          <p>All Twin Main Engine vessels have each propeller shaft and rudder centered at the <strong>quarter-beam position</strong> (half of half the hull's beam width).</p>
+          <p><strong>1)</strong> Each propeller shaft center is at quarter-beam</p>
+          <p><strong>2)</strong> Each rudder center is at quarter-beam</p>
+        </div>
+        <div class="card accent-orange">
+          <div class="card-title">Key Note</div>
+          <p>Both port and starboard engines must produce <strong>equal thrust power</strong>, and both rudder (steering) angles must be <strong>equal</strong>, for the vessel to proceed on a straight heading.</p>
+        </div>
+      </div>
+    </div>
+    <div class="page-badge">Page 11-2</div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== SECTION 2-1: NORMAL OPERATION ===== -->
+  <section class="section" id="sec2-1">
+    <div class="section-header">
+      <span class="section-num">2-1.</span>
+      <h2 class="section-title">Normal Operation — Both Engines Running</h2>
+    </div>
+
+    <div class="prop-status">
+      <div class="prop">
+        <div class="prop-circle on">✓</div>
+        <span class="prop-label">Port</span>
+      </div>
+      <div class="prop">
+        <div class="prop-circle on">✓</div>
+        <span class="prop-label">Stbd</span>
+      </div>
+    </div>
+
+    <div class="op-grid">
+      <div>
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Lever Position</h4>
+            <p>P: AH 90 &nbsp;|&nbsp; S: AH 90</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Steering Handle</h4>
+            <p>Combination Handle: 0° (Midship)</p>
+          </div>
+        </div>
+      </div>
+      <div class="card accent-green">
+        <div class="card-title">Normal Ahead Operation</div>
+        <p>Both engines at Ahead 90 (full power). Steering combination handle at 0° (midship). Equal thrust from both propellers ensures the vessel maintains a straight course.</p>
+      </div>
+    </div>
+
+    <div class="result success">
+      <div class="result-label">Result</div>
+      <p>Vessel proceeds <strong>straight ahead</strong> on the intended heading. Both engines provide equal thrust; no steering correction needed.</p>
+    </div>
+
+    <div class="page-badge">Page 11-3</div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== SECTION 3: STBD ENGINE DISABLED — AHEAD ===== -->
+  <section class="section" id="sec3">
+    <div class="section-header">
+      <span class="section-num">3.</span>
+      <h2 class="section-title">Starboard Engine Disabled — Ahead</h2>
+    </div>
+
+    <div class="prop-status">
+      <div class="prop">
+        <div class="prop-circle on">✓</div>
+        <span class="prop-label">Port</span>
+      </div>
+      <div class="prop">
+        <div class="prop-circle off">✕</div>
+        <span class="prop-label">Stbd</span>
+      </div>
+    </div>
+
+    <div class="op-grid">
+      <div>
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Lever Position</h4>
+            <p>Port: AH 90 (Starboard: OFF)</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Steering Handle</h4>
+            <p>Combination Handle: P 90° ~ S 90°</p>
+          </div>
+        </div>
+      </div>
+      <div class="card accent-red">
+        <div class="card-title">Vessel Behavior</div>
+        <p>With only the port engine running, the thrust is offset from the centerline. The vessel will naturally <strong>turn (yaw) to the STARBOARD side</strong>.</p>
+      </div>
+    </div>
+
+    <div class="result">
+      <div class="result-label">Correction Required</div>
+      <p>Apply <strong>10°~15° steering angle to PORT</strong> to maintain a straight course. (Exact angle varies by vessel.)</p>
+    </div>
+
+    <div class="page-badge">Page 11-4</div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== SECTION 3-1: STBD DISABLED — AHEAD CONTROLS ===== -->
+  <section class="section" id="sec3-1">
+    <div class="section-header">
+      <span class="section-num">3-1.</span>
+      <h2 class="section-title">Starboard Engine Disabled — Ahead (Controls)</h2>
+    </div>
+
+    <div class="op-grid">
+      <div class="control-panel">
+        <div class="control-panel-title">Wheelhouse Control Panel</div>
+        <div class="control-columns">
+          <div class="ctrl-col active">
+            <h5>Steering</h5>
+            <div class="value">P: AH 90</div>
+            <div class="sub">Full Ahead</div>
+          </div>
+          <div class="ctrl-col disabled">
+            <h5>Governor / Clutch</h5>
+            <div class="value">STBD: OFF</div>
+            <div class="sub">Engine Disabled</div>
+          </div>
+        </div>
+        <div class="combo-handle">
+          <div class="label">Combination Handle</div>
+          <div class="value">Heading Straight = P: 80°~85°</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="card-title">Control Settings Summary</div>
+          <p>• Port Lever: AH 90 (Full Ahead)</p>
+          <p>• Starboard Lever: 0 (Engine OFF)</p>
+          <p>• Steering Combination Handle: P 90° ~ S 90°</p>
+          <p style="margin-top:0.8rem"><strong>To maintain straight heading:</strong><br>Combination Handle → Port 80°~85°</p>
+        </div>
+        <div class="card accent-orange">
+          <div class="card-title">Important Note</div>
+          <p>The vessel will yaw to STARBOARD due to asymmetric thrust. Correct by applying 10°~15° port steering. The exact correction angle varies slightly between different vessels.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-badge">Page 11-5</div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== SECTION 3-2: STBD DISABLED — ASTERN ===== -->
+  <section class="section" id="sec3-2">
+    <div class="section-header">
+      <span class="section-num">3-2.</span>
+      <h2 class="section-title">Starboard Engine Disabled — Astern (Z-Peller)</h2>
+    </div>
+
+    <div class="prop-status">
+      <div class="prop">
+        <div class="prop-circle on">✓</div>
+        <span class="prop-label">Port</span>
+      </div>
+      <div class="prop">
+        <div class="prop-circle off">✕</div>
+        <span class="prop-label">Stbd</span>
+      </div>
+    </div>
+
+    <div class="op-grid">
+      <div>
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Lever Position</h4>
+            <p>Port: AS 90 (Astern Full)</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Steering Handle</h4>
+            <p>Combination Handle: P 90° ~ S 90°</p>
+          </div>
+        </div>
+      </div>
+      <div class="card accent-blue">
+        <div class="card-title">Z-Peller System — Astern Operation</div>
+        <p>When the starboard engine is disabled and only the port engine is used for navigation:</p>
+        <p><strong>1)</strong> Steering lever position: AS 90</p>
+        <p><strong>2)</strong> Astern power controlled by main engine RPM</p>
+        <p><strong>3)</strong> Astern direction controlled by Steering Combination Handle</p>
+      </div>
+    </div>
+
+    <div class="result danger">
+      <div class="result-label">Result</div>
+      <p>Stern swings to <strong>STARBOARD</strong>, bow swings to <strong>PORT</strong>. Use combination handle to control reverse direction.</p>
+    </div>
+
+    <div class="page-badge">Page 11-6</div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== SECTION 3-3: STBD DISABLED — ASTERN CONTROLS ===== -->
+  <section class="section" id="sec3-3">
+    <div class="section-header">
+      <span class="section-num">3-3.</span>
+      <h2 class="section-title">Starboard Engine Disabled — Astern (Controls)</h2>
+    </div>
+
+    <div class="op-grid">
+      <div class="control-panel">
+        <div class="control-panel-title">Wheelhouse Control Panel</div>
+        <div class="control-columns">
+          <div class="ctrl-col active">
+            <h5>Steering</h5>
+            <div class="value">P: AS 90</div>
+            <div class="sub">Full Astern</div>
+          </div>
+          <div class="ctrl-col disabled">
+            <h5>Governor / Clutch</h5>
+            <div class="value">STBD: OFF</div>
+            <div class="sub">Engine Disabled</div>
+          </div>
+        </div>
+        <div class="combo-handle">
+          <div class="label">Combination Handle</div>
+          <div class="value">Stern Straight = S: 80°~85°</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="card-title">Control Settings Summary</div>
+          <p>• Port Lever: AS 90 (Full Astern)</p>
+          <p>• Starboard Lever: 0 (Engine OFF)</p>
+          <p>• Steering Combination Handle: P 90° ~ S 90°</p>
+          <p style="margin-top:0.8rem"><strong>To maintain straight astern heading:</strong><br>Combination Handle → Starboard 80°~85°</p>
+        </div>
+        <div class="card accent-orange">
+          <div class="card-title">Important Note</div>
+          <p>The vessel will yaw to STARBOARD when going astern. Apply 10°~15° steering correction to PORT side to maintain a straight reverse course. Correction angle varies slightly between vessels.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-badge">Page 11-7</div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== SECTION 4: PORT ENGINE DISABLED — AHEAD ===== -->
+  <section class="section" id="sec4">
+    <div class="section-header">
+      <span class="section-num">4.</span>
+      <h2 class="section-title">Port Engine Disabled — Ahead</h2>
+    </div>
+
+    <div class="prop-status">
+      <div class="prop">
+        <div class="prop-circle off">✕</div>
+        <span class="prop-label">Port</span>
+      </div>
+      <div class="prop">
+        <div class="prop-circle on">✓</div>
+        <span class="prop-label">Stbd</span>
+      </div>
+    </div>
+
+    <div class="op-grid">
+      <div>
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Lever Position</h4>
+            <p>Starboard: AH 90 (Port: OFF)</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Steering Handle</h4>
+            <p>Combination Handle: P 90° ~ S 90°</p>
+          </div>
+        </div>
+      </div>
+      <div class="card accent-red">
+        <div class="card-title">Vessel Behavior</div>
+        <p>With only the starboard engine running, the thrust is offset from the centerline. The vessel will naturally <strong>turn (yaw) to the PORT side</strong>.</p>
+      </div>
+    </div>
+
+    <div class="result">
+      <div class="result-label">Correction Required</div>
+      <p>Apply <strong>10°~15° steering angle to STARBOARD</strong> to maintain a straight course. (Exact angle varies by vessel.)</p>
+    </div>
+
+    <div class="page-badge">Page 11-8</div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== SECTION 4-1: PORT DISABLED — AHEAD CONTROLS ===== -->
+  <section class="section" id="sec4-1">
+    <div class="section-header">
+      <span class="section-num">4-1.</span>
+      <h2 class="section-title">Port Engine Disabled — Ahead (Controls)</h2>
+    </div>
+
+    <div class="op-grid">
+      <div class="control-panel">
+        <div class="control-panel-title">Wheelhouse Control Panel</div>
+        <div class="control-columns">
+          <div class="ctrl-col disabled">
+            <h5>Steering</h5>
+            <div class="value">PORT: OFF</div>
+            <div class="sub">Engine Disabled</div>
+          </div>
+          <div class="ctrl-col active">
+            <h5>Governor / Clutch</h5>
+            <div class="value">S: AH 90</div>
+            <div class="sub">Full Ahead</div>
+          </div>
+        </div>
+        <div class="combo-handle">
+          <div class="label">Combination Handle</div>
+          <div class="value">Heading Straight = S: 80°~85°</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="card-title">Control Settings Summary</div>
+          <p>• Starboard Lever: AH 90 (Full Ahead)</p>
+          <p>• Port Lever: 0 (Engine OFF)</p>
+          <p>• Steering Combination Handle: P 90° ~ S 90°</p>
+          <p style="margin-top:0.8rem"><strong>To maintain straight heading:</strong><br>Combination Handle → Starboard 80°~85°</p>
+        </div>
+        <div class="card accent-orange">
+          <div class="card-title">Important Note</div>
+          <p>The vessel will yaw to PORT due to asymmetric thrust from the starboard engine only. Correct by applying 10°~15° starboard steering. The exact correction angle varies between vessels.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-badge">Page 11-9</div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== SECTION 4-2: PORT DISABLED — ASTERN ===== -->
+  <section class="section" id="sec4-2">
+    <div class="section-header">
+      <span class="section-num">4-2.</span>
+      <h2 class="section-title">Port Engine Disabled — Astern (Z-Peller)</h2>
+    </div>
+
+    <div class="prop-status">
+      <div class="prop">
+        <div class="prop-circle off">✕</div>
+        <span class="prop-label">Port</span>
+      </div>
+      <div class="prop">
+        <div class="prop-circle on">✓</div>
+        <span class="prop-label">Stbd</span>
+      </div>
+    </div>
+
+    <div class="op-grid">
+      <div>
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Lever Position</h4>
+            <p>Starboard: AS 90 (Astern Full)</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Steering Handle</h4>
+            <p>Combination Handle: P 90° ~ S 90°</p>
+          </div>
+        </div>
+      </div>
+      <div class="card accent-blue">
+        <div class="card-title">Z-Peller System — Astern Operation</div>
+        <p>When the port engine is disabled and only the starboard engine is used for navigation:</p>
+        <p><strong>1)</strong> Steering lever position: AS 90</p>
+        <p><strong>2)</strong> Astern power controlled by main engine RPM</p>
+        <p><strong>3)</strong> Astern direction controlled by Steering Combination Handle</p>
+      </div>
+    </div>
+
+    <div class="result danger">
+      <div class="result-label">Result</div>
+      <p>Stern swings to <strong>PORT</strong>, bow swings to <strong>STARBOARD</strong>. Use combination handle to control reverse direction.</p>
+    </div>
+
+    <div class="page-badge">Page 11-10</div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== SECTION 4-3: PORT DISABLED — ASTERN CONTROLS ===== -->
+  <section class="section" id="sec4-3">
+    <div class="section-header">
+      <span class="section-num">4-3.</span>
+      <h2 class="section-title">Port Engine Disabled — Astern (Controls)</h2>
+    </div>
+
+    <div class="op-grid">
+      <div class="control-panel">
+        <div class="control-panel-title">Wheelhouse Control Panel</div>
+        <div class="control-columns">
+          <div class="ctrl-col disabled">
+            <h5>Steering</h5>
+            <div class="value">PORT: OFF</div>
+            <div class="sub">Engine Disabled</div>
+          </div>
+          <div class="ctrl-col active">
+            <h5>Governor / Clutch</h5>
+            <div class="value">S: AS 90</div>
+            <div class="sub">Full Astern</div>
+          </div>
+        </div>
+        <div class="combo-handle">
+          <div class="label">Combination Handle</div>
+          <div class="value">Stern Straight = P: 80°~85°</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="card-title">Control Settings Summary</div>
+          <p>• Starboard Lever: AS 90 (Full Astern)</p>
+          <p>• Port Lever: 0 (Engine OFF)</p>
+          <p>• Steering Combination Handle: P 90° ~ S 90°</p>
+          <p style="margin-top:0.8rem"><strong>To maintain straight astern heading:</strong><br>Combination Handle → Port 80°~85°</p>
+        </div>
+        <div class="card accent-orange">
+          <div class="card-title">Important Note</div>
+          <p>The vessel will yaw to STARBOARD when going astern with port engine disabled. Apply 10°~15° correction to PORT to maintain a straight reverse course. Correction angle varies between vessels.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-badge">Page 11-11</div>
+  </section>
+
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <p>Chapter 6 — Understanding Single Main Engine and Twin Main Engine Vessel Operations</p>
+  <p style="margin-top:0.5rem">Copyright by Glory Lee &nbsp;|&nbsp; <a href="https://blog.naver.com/glory5239" target="_blank">https://blog.naver.com/glory5239</a></p>
+</footer>
+
+</body>
+</html>
