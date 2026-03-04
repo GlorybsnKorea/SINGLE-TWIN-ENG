@@ -534,23 +534,100 @@
 
     <div class="vessel-diagram">
       <div class="vessel-svg-wrap">
-        <svg class="vessel" viewBox="0 0 140 320" width="160" height="300">
+        <!--
+          SINGLE ENGINE TUGBOAT — Plan View
+          Based on GA drawing: narrow pointed bow (top),
+          rapidly widening hull, wide flat-cornered stern (bottom),
+          single centred propeller at stern.
+        -->
+        <svg class="vessel" viewBox="0 0 200 380" width="170" height="323">
           <defs>
             <linearGradient id="hullGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#1A5276" stop-opacity="0.08"/>
-              <stop offset="100%" stop-color="#1A5276" stop-opacity="0.03"/>
+              <stop offset="0%" stop-color="#AED6F1" stop-opacity="0.25"/>
+              <stop offset="100%" stop-color="#148F77" stop-opacity="0.10"/>
             </linearGradient>
           </defs>
-          <!-- Hull -->
-          <path d="M70 10 Q110 10 115 50 L115 260 Q115 300 70 310 Q25 300 25 260 L25 50 Q25 10 70 10Z" fill="url(#hullGrad)" stroke="#1A5276" stroke-width="2.5"/>
-          <!-- Centerline -->
-          <line x1="70" y1="5" x2="70" y2="315" stroke="#1A5276" stroke-width="2" stroke-dasharray="8 6"/>
-          <!-- Propeller -->
-          <circle cx="70" cy="275" r="14" fill="#148F77" stroke="#0D2B4E" stroke-width="2"/>
-          <text x="70" y="280" text-anchor="middle" fill="white" font-size="11" font-weight="bold">P</text>
-          <!-- Labels -->
-          <text x="70" y="155" text-anchor="middle" fill="#566573" font-size="11" font-family="sans-serif">VESSEL</text>
-          <text x="70" y="310" text-anchor="middle" fill="#1A5276" font-size="9" font-weight="bold" font-family="sans-serif">CENTER LINE</text>
+
+          <!-- ═══ OUTER HULL ═══
+               Bow : narrow pointed tip (top)
+               Sides: sweep out to max beam then run STRAIGHT down
+               Stern: port & stbd sides run straight to corners,
+                      then only a tiny 3-5° radius curve at each corner,
+                      and a near-flat stern transom  -->
+          <path d="
+            M 100 14
+            C 124 14 178 48 182 88
+            L 182 304
+            C 182 318 174 326 162 326
+            L 38 326
+            C 26 326 18 318 18 304
+            L 18 88
+            C 22 48 76 14 100 14 Z"
+            fill="url(#hullGrad)" stroke="#1A5276" stroke-width="2.8"/>
+
+          <!-- ═══ INNER DECK / BULWARK LINE (inset ~13px) ═══ -->
+          <path d="
+            M 100 27
+            C 120 27 165 56 168 92
+            L 168 302
+            C 168 312 162 317 152 317
+            L 48 317
+            C 38 317 32 312 32 302
+            L 32 92
+            C 35 56 80 27 100 27 Z"
+            fill="none" stroke="#1A5276" stroke-width="1" stroke-dasharray="6 4" opacity="0.4"/>
+
+          <!-- ═══ WHEELHOUSE (forward, wider) ═══ -->
+          <rect x="58" y="66" width="84" height="62" rx="6"
+                fill="#EBF5FB" stroke="#1A5276" stroke-width="1.5" opacity="0.75"/>
+          <line x1="100" y1="66" x2="100" y2="128" stroke="#1A5276" stroke-width="0.8" opacity="0.3"/>
+          <text x="100" y="100" text-anchor="middle" fill="#0D2B4E" font-size="8.5" font-weight="bold" font-family="sans-serif">WHEEL</text>
+          <text x="100" y="112" text-anchor="middle" fill="#0D2B4E" font-size="8.5" font-weight="bold" font-family="sans-serif">HOUSE</text>
+
+          <!-- ═══ ACCOMMODATION ═══ -->
+          <rect x="46" y="140" width="108" height="44" rx="4"
+                fill="#D6EAF8" stroke="#1A5276" stroke-width="1" opacity="0.6"/>
+          <text x="100" y="166" text-anchor="middle" fill="#1A5276" font-size="8" font-family="sans-serif">ACCOMMODATION</text>
+
+          <!-- ═══ ENGINE ROOM ═══ -->
+          <rect x="46" y="194" width="108" height="72" rx="4"
+                fill="#FEF9E7" stroke="#F39C12" stroke-width="1.5" opacity="0.75"/>
+          <text x="100" y="233" text-anchor="middle" fill="#9A7D0A" font-size="8.5" font-weight="bold" font-family="sans-serif">ENGINE</text>
+          <text x="100" y="246" text-anchor="middle" fill="#9A7D0A" font-size="8" font-family="sans-serif">ROOM</text>
+
+          <!-- ═══ CENTERLINE ═══ -->
+          <line x1="100" y1="4" x2="100" y2="362"
+                stroke="#1A5276" stroke-width="1.5" stroke-dasharray="10 6" opacity="0.55"/>
+
+          <!-- ═══ SHAFT BOSS / STERN TUBE ═══ -->
+          <rect x="94" y="278" width="12" height="36" rx="3"
+                fill="#D5DADE" stroke="#566573" stroke-width="1" opacity="0.7"/>
+
+          <!-- ═══ SINGLE CENTRE PROPELLER ═══ -->
+          <circle cx="100" cy="338" r="24" fill="none" stroke="#0D2B4E" stroke-width="2"/>
+          <circle cx="100" cy="338" r="7" fill="#1A5276" stroke="#0D2B4E" stroke-width="1.5"/>
+          <path d="M100 314 C106 318 106 322 100 331 C94 322 94 318 100 314Z" fill="#148F77" stroke="#0D2B4E" stroke-width="1"/>
+          <path d="M100 362 C94 358 94 354 100 345 C106 354 106 358 100 362Z" fill="#148F77" stroke="#0D2B4E" stroke-width="1"/>
+          <path d="M76 338 C80 332 84 332 93 338 C84 344 80 344 76 338Z"     fill="#148F77" stroke="#0D2B4E" stroke-width="1"/>
+          <path d="M124 338 C120 344 116 344 107 338 C116 332 120 332 124 338Z" fill="#148F77" stroke="#0D2B4E" stroke-width="1"/>
+          <circle cx="100" cy="338" r="4" fill="white"/>
+
+          <!-- ═══ RUDDER (aft of prop) ═══ -->
+          <rect x="96" y="363" width="8" height="11" rx="2"
+                fill="#566573" stroke="#0D2B4E" stroke-width="1" opacity="0.7"/>
+
+          <!-- ═══ BOW / STERN LABELS ═══ -->
+          <text x="100" y="9" text-anchor="middle" fill="#148F77" font-size="9" font-weight="bold" font-family="sans-serif">▲ BOW</text>
+          <text x="100" y="378" text-anchor="middle" fill="#148F77" font-size="9" font-weight="bold" font-family="sans-serif">STERN ▼</text>
+
+          <!-- ═══ PORT / STBD LABELS ═══ -->
+          <text x="6" y="185" text-anchor="middle" fill="#1A5276" font-size="8" font-weight="bold" font-family="sans-serif"
+                transform="rotate(-90 6 185)">◀ PORT</text>
+          <text x="194" y="185" text-anchor="middle" fill="#1A5276" font-size="8" font-weight="bold" font-family="sans-serif"
+                transform="rotate(90 194 185)">STBD ▶</text>
+
+          <!-- ═══ C/L NOTE ═══ -->
+          <text x="107" y="9" text-anchor="start" fill="#1A5276" font-size="7" font-family="sans-serif" opacity="0.6"> C/L</text>
         </svg>
       </div>
       <div class="vessel-info">
@@ -580,31 +657,176 @@
 
     <div class="vessel-diagram">
       <div class="vessel-svg-wrap">
-        <svg class="vessel" viewBox="0 0 160 320" width="180" height="300">
+        <!--
+          TWIN ENGINE TUGBOAT — Plan View
+          Narrow pointed bow (top), wide flat stern (bottom),
+          two large propellers port & starboard at stern.
+        -->
+        <svg class="vessel" viewBox="0 0 210 400" width="175" height="340">
           <defs>
             <linearGradient id="hullGrad2" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#1A5276" stop-opacity="0.08"/>
-              <stop offset="100%" stop-color="#1A5276" stop-opacity="0.03"/>
+              <stop offset="0%" stop-color="#AED6F1" stop-opacity="0.25"/>
+              <stop offset="100%" stop-color="#148F77" stop-opacity="0.10"/>
             </linearGradient>
           </defs>
-          <!-- Hull -->
-          <path d="M80 10 Q125 10 130 50 L130 260 Q130 300 80 310 Q30 300 30 260 L30 50 Q30 10 80 10Z" fill="url(#hullGrad2)" stroke="#1A5276" stroke-width="2.5"/>
-          <!-- Center line (faint) -->
-          <line x1="80" y1="5" x2="80" y2="315" stroke="#D5DADE" stroke-width="1" stroke-dasharray="6 5"/>
-          <!-- Port propeller line -->
-          <line x1="55" y1="240" x2="55" y2="295" stroke="#1A5276" stroke-width="1.5" stroke-dasharray="5 4"/>
-          <!-- Starboard propeller line -->
-          <line x1="105" y1="240" x2="105" y2="295" stroke="#1A5276" stroke-width="1.5" stroke-dasharray="5 4"/>
-          <!-- Port propeller -->
-          <circle cx="55" cy="270" r="13" fill="#148F77" stroke="#0D2B4E" stroke-width="2"/>
-          <text x="55" y="274" text-anchor="middle" fill="white" font-size="9" font-weight="bold">P</text>
-          <!-- Starboard propeller -->
-          <circle cx="105" cy="270" r="13" fill="#148F77" stroke="#0D2B4E" stroke-width="2"/>
-          <text x="105" y="274" text-anchor="middle" fill="white" font-size="9" font-weight="bold">S</text>
-          <!-- Labels -->
-          <text x="80" y="155" text-anchor="middle" fill="#566573" font-size="11" font-family="sans-serif">VESSEL</text>
-          <text x="55" y="300" text-anchor="middle" fill="#1A5276" font-size="8" font-weight="bold">PORT</text>
-          <text x="105" y="300" text-anchor="middle" fill="#1A5276" font-size="8" font-weight="bold">STBD</text>
+
+          <!-- ═══ OUTER HULL ═══
+               Bow : narrow pointed (top)
+               Sides: sweep to max beam then run STRAIGHT down
+               Stern: straight sides all the way, only 3-5° corner curve -->
+          <path d="
+            M 105 14
+            C 129 14 184 48 188 88
+            L 188 304
+            C 188 318 180 326 168 326
+            L 42 326
+            C 30 326 22 318 22 304
+            L 22 88
+            C 26 48 81 14 105 14 Z"
+            fill="url(#hullGrad2)" stroke="#1A5276" stroke-width="2.8"/>
+
+          <!-- ═══ INNER DECK LINE ═══ -->
+          <path d="
+            M 105 27
+            C 125 27 172 56 175 92
+            L 175 302
+            C 175 312 169 317 159 317
+            L 51 317
+            C 41 317 35 312 35 302
+            L 35 92
+            C 38 56 85 27 105 27 Z"
+            fill="none" stroke="#1A5276" stroke-width="1" stroke-dasharray="6 4" opacity="0.4"/>
+
+          <!-- ═══ WHEELHOUSE ═══ -->
+          <rect x="63" y="64" width="84" height="62" rx="6"
+                fill="#EBF5FB" stroke="#1A5276" stroke-width="1.5" opacity="0.75"/>
+          <line x1="105" y1="64" x2="105" y2="126" stroke="#1A5276" stroke-width="0.8" opacity="0.3"/>
+          <text x="105" y="98" text-anchor="middle" fill="#0D2B4E" font-size="8.5" font-weight="bold" font-family="sans-serif">WHEEL</text>
+          <text x="105" y="110" text-anchor="middle" fill="#0D2B4E" font-size="8.5" font-weight="bold" font-family="sans-serif">HOUSE</text>
+
+          <!-- ═══ ACCOMMODATION ═══ -->
+          <rect x="51" y="138" width="108" height="44" rx="4"
+                fill="#D6EAF8" stroke="#1A5276" stroke-width="1" opacity="0.6"/>
+          <text x="105" y="164" text-anchor="middle" fill="#1A5276" font-size="8" font-family="sans-serif">ACCOMMODATION</text>
+
+          <!-- ═══ ENGINE ROOM ═══ -->
+          <rect x="51" y="192" width="108" height="72" rx="4"
+                fill="#FEF9E7" stroke="#F39C12" stroke-width="1.5" opacity="0.75"/>
+          <text x="105" y="231" text-anchor="middle" fill="#9A7D0A" font-size="8.5" font-weight="bold" font-family="sans-serif">ENGINE</text>
+          <text x="105" y="244" text-anchor="middle" fill="#9A7D0A" font-size="8" font-family="sans-serif">ROOM</text>
+
+          <!-- ═══ HULL CENTERLINE — 검정색 ═══ -->
+          <line x1="105" y1="4" x2="105" y2="344"
+                stroke="#1B2631" stroke-width="1.8" stroke-dasharray="10 5" opacity="0.85"/>
+          <text x="109" y="340" fill="#1B2631" font-size="7" font-weight="bold" font-family="sans-serif" opacity="0.75">C/L</text>
+
+          <!-- ═══ PORT ENGINE CENTER LINE — 청색 (프로펠러 → 선수) ═══ -->
+          <line x1="75" y1="314" x2="75" y2="27"
+                stroke="#1A6FD4" stroke-width="1.5" stroke-dasharray="7 4" opacity="0.85"/>
+          <!-- 아래→위 수직 텍스트 -->
+          <text transform="rotate(-90, 75, 170)"
+                x="75" y="170"
+                text-anchor="middle"
+                dominant-baseline="auto"
+                dx="0" dy="-5"
+                fill="#1A6FD4" font-size="6.5" font-weight="bold" font-family="sans-serif" letter-spacing="0.8">PORT SIDE ENGINE CENTER</text>
+
+          <!-- ═══ STBD ENGINE CENTER LINE — 청색 (프로펠러 → 선수) ═══ -->
+          <line x1="135" y1="314" x2="135" y2="27"
+                stroke="#1A6FD4" stroke-width="1.5" stroke-dasharray="7 4" opacity="0.85"/>
+          <!-- 아래→위 수직 텍스트 -->
+          <text transform="rotate(-90, 135, 170)"
+                x="135" y="170"
+                text-anchor="middle"
+                dominant-baseline="auto"
+                dx="0" dy="-5"
+                fill="#1A6FD4" font-size="6.5" font-weight="bold" font-family="sans-serif" letter-spacing="0.8">STARBOARD SIDE ENGINE CENTER</text>
+
+          <!-- ═══════════════════════════════════════════
+               각도 표시 — 선수 기준점(105,14)에서
+               각 엔진 C/L 까지의 오프셋 각도 ≈ 5.7°
+          ═══════════════════════════════════════════ -->
+
+          <!-- 선수 기준점 → PORT 프로펠러 사선 (연한 점선) -->
+          <line x1="105" y1="14" x2="75" y2="314"
+                stroke="#1A6FD4" stroke-width="0.8" stroke-dasharray="4 4" opacity="0.35"/>
+          <!-- 선수 기준점 → STBD 프로펠러 사선 (연한 점선) -->
+          <line x1="105" y1="14" x2="135" y2="314"
+                stroke="#1A6FD4" stroke-width="0.8" stroke-dasharray="4 4" opacity="0.35"/>
+
+          <!-- PORT 각도 호 (bow tip 기준, 반경 38px, 시작=90°, 끝=84.3°) -->
+          <!-- arc: cx=105,cy=14, r=38, from -90° (up) to -84.3° (port offset) -->
+          <!-- SVG arc: start point = (105, 14-38)=(105,-24)→clipped, use smaller r=32 -->
+          <path d="M 105 46
+                   A 32 32 0 0 0 89.1 48.9"
+                stroke="#E74C3C" stroke-width="1.5" fill="none" opacity="0.9"/>
+          <!-- PORT 각도 라벨 -->
+          <text x="84" y="62" fill="#E74C3C" font-size="7.5" font-weight="bold" font-family="sans-serif">5.7°</text>
+
+          <!-- STBD 각도 호 -->
+          <path d="M 105 46
+                   A 32 32 0 0 1 120.9 48.9"
+                stroke="#E74C3C" stroke-width="1.5" fill="none" opacity="0.9"/>
+          <!-- STBD 각도 라벨 -->
+          <text x="118" y="62" fill="#E74C3C" font-size="7.5" font-weight="bold" font-family="sans-serif">5.7°</text>
+
+          <!-- 각도 기준점 표시 (작은 원) -->
+          <circle cx="105" cy="14" r="2.5" fill="#E74C3C" opacity="0.8"/>
+
+          <!-- 범례 박스 -->
+          <rect x="30" y="350" width="150" height="24" rx="4"
+                fill="#FEF9E7" stroke="#E74C3C" stroke-width="1" opacity="0.85"/>
+          <text x="105" y="358" text-anchor="middle" fill="#922B21" font-size="6.5" font-weight="bold" font-family="sans-serif">각 엔진 C/L 오프셋 (선수 기준)</text>
+          <text x="105" y="369" text-anchor="middle" fill="#922B21" font-size="6.5" font-family="sans-serif">Hull C/L → Port/Stbd Engine C/L ≈ 5.7°</text>
+
+          <!-- ═══ PORT SHAFT BOSS ═══ -->
+          <rect x="70" y="274" width="10" height="36" rx="3"
+                fill="#D5DADE" stroke="#566573" stroke-width="1" opacity="0.7"/>
+          <!-- ═══ STBD SHAFT BOSS ═══ -->
+          <rect x="130" y="274" width="10" height="36" rx="3"
+                fill="#D5DADE" stroke="#566573" stroke-width="1" opacity="0.7"/>
+
+          <!-- ═══ PORT PROPELLER ═══ -->
+          <circle cx="75" cy="338" r="24" fill="none" stroke="#0D2B4E" stroke-width="2"/>
+          <circle cx="75" cy="338" r="7"  fill="#1A5276" stroke="#0D2B4E" stroke-width="1.5"/>
+          <path d="M75 314 C81 318 81 322 75 331 C69 322 69 318 75 314Z" fill="#1A5276" stroke="#0D2B4E" stroke-width="1"/>
+          <path d="M75 362 C69 358 69 354 75 345 C81 354 81 358 75 362Z" fill="#1A5276" stroke="#0D2B4E" stroke-width="1"/>
+          <path d="M51 338 C55 332 59 332 68 338 C59 344 55 344 51 338Z"  fill="#1A5276" stroke="#0D2B4E" stroke-width="1"/>
+          <path d="M99 338 C95 344 91 344 82 338 C91 332 95 332 99 338Z"  fill="#1A5276" stroke="#0D2B4E" stroke-width="1"/>
+          <circle cx="75" cy="338" r="4" fill="white"/>
+
+          <!-- ═══ STBD PROPELLER ═══ -->
+          <circle cx="135" cy="338" r="24" fill="none" stroke="#0D2B4E" stroke-width="2"/>
+          <circle cx="135" cy="338" r="7"  fill="#148F77" stroke="#0D2B4E" stroke-width="1.5"/>
+          <path d="M135 314 C141 318 141 322 135 331 C129 322 129 318 135 314Z" fill="#148F77" stroke="#0D2B4E" stroke-width="1"/>
+          <path d="M135 362 C129 358 129 354 135 345 C141 354 141 358 135 362Z" fill="#148F77" stroke="#0D2B4E" stroke-width="1"/>
+          <path d="M111 338 C115 332 119 332 128 338 C119 344 115 344 111 338Z" fill="#148F77" stroke="#0D2B4E" stroke-width="1"/>
+          <path d="M159 338 C155 344 151 344 142 338 C151 332 155 332 159 338Z" fill="#148F77" stroke="#0D2B4E" stroke-width="1"/>
+          <circle cx="135" cy="338" r="4" fill="white"/>
+
+          <!-- ═══ RUDDERS ═══ -->
+          <rect x="71" y="363" width="8" height="11" rx="2" fill="#566573" stroke="#0D2B4E" stroke-width="1" opacity="0.7"/>
+          <rect x="131" y="363" width="8" height="11" rx="2" fill="#566573" stroke="#0D2B4E" stroke-width="1" opacity="0.7"/>
+
+          <!-- ═══ QUARTER-BEAM DIMENSION ═══ -->
+          <line x1="75" y1="274" x2="105" y2="274" stroke="#E74C3C" stroke-width="1" stroke-dasharray="3 2" opacity="0.7"/>
+          <text x="90" y="271" text-anchor="middle" fill="#E74C3C" font-size="7" font-family="sans-serif">¼B</text>
+          <line x1="105" y1="274" x2="135" y2="274" stroke="#E74C3C" stroke-width="1" stroke-dasharray="3 2" opacity="0.7"/>
+          <text x="120" y="271" text-anchor="middle" fill="#E74C3C" font-size="7" font-family="sans-serif">¼B</text>
+
+          <!-- ═══ PROP LABELS ═══ -->
+          <text x="75"  y="284" text-anchor="middle" fill="#1A5276" font-size="8" font-weight="bold" font-family="sans-serif">PORT</text>
+          <text x="135" y="284" text-anchor="middle" fill="#148F77" font-size="8" font-weight="bold" font-family="sans-serif">STBD</text>
+
+          <!-- ═══ BOW / STERN ═══ -->
+          <text x="105" y="9"   text-anchor="middle" fill="#148F77" font-size="9" font-weight="bold" font-family="sans-serif">▲ BOW</text>
+          <text x="105" y="378" text-anchor="middle" fill="#148F77" font-size="9" font-weight="bold" font-family="sans-serif">STERN ▼</text>
+
+          <!-- ═══ PORT / STBD ═══ -->
+          <text x="9"   y="185" text-anchor="middle" fill="#1A5276" font-size="8" font-weight="bold" font-family="sans-serif"
+                transform="rotate(-90 9 185)">◀ PORT</text>
+          <text x="201" y="185" text-anchor="middle" fill="#1A5276" font-size="8" font-weight="bold" font-family="sans-serif"
+                transform="rotate(90 201 185)">STBD ▶</text>
         </svg>
       </div>
       <div class="vessel-info">
